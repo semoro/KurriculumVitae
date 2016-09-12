@@ -1,6 +1,7 @@
 package me.semoro.kv.admin
 
 import me.semoro.ktor.jade.JadeContent
+import me.semoro.kv.index.standardDateFormat
 import me.semoro.kv.model.AccessToken
 import me.semoro.kv.model.CV
 import me.semoro.kv.model.Skill
@@ -49,7 +50,7 @@ fun Route.manageRoute() {
             transaction {
                 val tokens = AccessToken.all()
                 val allCV = CV.all()
-                call.respondText(ContentType.Text.Html, View.Manage.createContent(mapOf("tokens" to tokens, "allCV" to allCV, "externalUrl" to SystemConfiguration.config!!.externalSiteUrl)).processImmediately())
+                call.respondText(ContentType.Text.Html, View.Manage.createContent(mapOf("tokens" to tokens, "allCV" to allCV, "externalUrl" to SystemConfiguration.config!!.externalSiteUrl, "standardDateFormat" to standardDateFormat)).processImmediately())
             }
         }
         get("revokeToken/{id}") {
@@ -64,7 +65,7 @@ fun Route.manageRoute() {
             transaction {
                 AccessToken.new {
                     cv = CV.findById(it.parameters["cvId"]!!.toInt())!!
-                    validThrough = DateTime(call.parameters["date"])
+                    validThrough = DateTime(standardDateFormat.parse(it.parameters["validThrough"]))
                     key = randomString(16)
                     views = 0
                 }

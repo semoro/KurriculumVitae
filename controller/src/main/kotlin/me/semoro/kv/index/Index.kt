@@ -13,7 +13,9 @@ import org.jetbrains.ktor.response.respondRedirect
 import org.jetbrains.ktor.response.respondText
 import org.jetbrains.ktor.routing.Route
 import org.jetbrains.ktor.routing.get
+import java.text.SimpleDateFormat
 
+val standardDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
 fun Route.indexRoute() {
     get("{token}") {
@@ -25,7 +27,7 @@ fun Route.indexRoute() {
         call.parameters["token"]?.let { token ->
             transaction {
                 val foundToken = AccessToken.find { AccessTokens.key eq token }.firstOrNull()!!
-                if (foundToken.validThrough.isBeforeNow) {
+                if (foundToken.validThrough.isAfterNow) {
                     foundToken.views = foundToken.views + 1
                     commit()
                     call.respondText(ContentType.Text.Html, View.Index.createContent(mapOf("token" to foundToken)).processImmediately())
