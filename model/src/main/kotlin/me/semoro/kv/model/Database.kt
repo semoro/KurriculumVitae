@@ -45,6 +45,7 @@ object AccessTokens : IntIdTable() {
     val key = varchar("key", 16).uniqueIndex()
     val cv = reference("cv", CVs)
     val validThrough = date("validThrough")
+    val views = integer("views")
 }
 
 val allTables = arrayOf(Skills, OpenSourceProjects, AdditionalProjects, Uploads, CVs, AccessTokens)
@@ -99,5 +100,5 @@ class AccessToken(id: EntityID<Int>) : IntEntity(id) {
     var key by AccessTokens.key
     var validThrough by AccessTokens.validThrough
     var cv by CV referencedOn AccessTokens.cv
-
+    var views by AccessTokens.views
 }

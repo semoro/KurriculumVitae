@@ -12,16 +12,24 @@ import java.lang.Exception
 object SystemConfiguration {
     val configFile = File("systemConfig.json")
 
-    data class Config(var dbDriver: String, var dbConnectionString: String, var adminPasswordHash: String)
+    data class Config(var dbDriver: String,
+                      var dbConnectionString: String,
+                      var dbUser: String = "",
+                      var dbPassword: String = "",
+                      var externalSiteUrl: String,
+                      var adminPasswordHash: String)
 
     var config: Config?
 
 
-    fun databaseConnectOrNull(): Database? {
+    fun connectToDatabase(): Database {
+        return Database.connect(config!!.dbConnectionString, config!!.dbDriver, config!!.dbUser, config!!.dbPassword)
+    }
 
+    fun databaseConnectOrNull(): Database? {
         if (config != null) {
             try {
-                return Database.connect(config!!.dbConnectionString, config!!.dbDriver)
+                return connectToDatabase()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

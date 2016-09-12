@@ -4,6 +4,7 @@ import me.semoro.ktor.jade.JadeContent
 import me.semoro.kv.model.AccessToken
 import me.semoro.kv.model.CV
 import me.semoro.kv.model.Skill
+import me.semoro.kv.utils.SystemConfiguration
 import me.semoro.kv.view.View
 import me.semoro.kv.view.ViewConfig
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -20,10 +21,10 @@ import java.util.*
 
 fun Route.editRoute() {
     route("/edit") {
-        get {
+        get("{id}") {
             connectToDatabaseOrRedirectToRepair(call)
             transaction {
-                val cv = CV.findById(it.request.queryParameters["id"]!!.toInt())
+                val cv = CV.findById(it.parameters["id"]!!.toInt())
                 if (cv != null)
                     call.respondText(ContentType.Text.Html, View.Edit.createContent(mapOf("CV" to cv)).processImmediately())
             }
@@ -48,13 +49,13 @@ fun Route.manageRoute() {
             transaction {
                 val tokens = AccessToken.all()
                 val allCV = CV.all()
-                call.respondText(ContentType.Text.Html, View.Manage.createContent(mapOf("tokens" to tokens, "allCV" to allCV)).processImmediately())
+                call.respondText(ContentType.Text.Html, View.Manage.createContent(mapOf("tokens" to tokens, "allCV" to allCV, "externalUrl" to SystemConfiguration.config!!.externalSiteUrl)).processImmediately())
             }
         }
-        get("revokeToken") {
+        get("revokeToken/{id}") {
             connectToDatabaseOrRedirectToRepair(call)
             transaction {
-                AccessToken.findById(it.request.queryParameters["id"]!!.toInt())?.delete()
+                AccessToken.findById(it.parameters["id"]!!.toInt())?.delete()
             }
             call.respondRedirect("/manage")
         }
@@ -65,6 +66,7 @@ fun Route.manageRoute() {
                     cv = CV.findById(it.parameters["cvId"]!!.toInt())!!
                     validThrough = DateTime(call.parameters["date"])
                     key = randomString(16)
+                    views = 0
                 }
             }
             call.respondRedirect("/manage")
@@ -85,7 +87,7 @@ fun Route.manageRoute() {
                     rootSkill = skill
                 }
             }
-            call.respondRedirect("/edit?id=${cv.id}")
+            call.respondRedirect("/edit/${cv.id}")
         }
     }
 }

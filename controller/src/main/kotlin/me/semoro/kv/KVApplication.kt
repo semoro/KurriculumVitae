@@ -5,6 +5,7 @@ import me.semoro.kv.admin.editRoute
 
 import me.semoro.kv.admin.installRoute
 import me.semoro.kv.admin.manageRoute
+import me.semoro.kv.admin.settingsRoute
 
 import me.semoro.kv.index.indexRoute
 import me.semoro.kv.model.allTables
@@ -41,6 +42,7 @@ class KVApplication(environment: ApplicationEnvironment) : Application(environme
             installRoute()
             editRoute()
             manageRoute()
+            settingsRoute()
             staticFolder("/stylesheets")
             staticFolder("/fonts")
             staticFolder("/fonts/roboto")

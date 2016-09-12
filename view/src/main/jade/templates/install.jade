@@ -1,9 +1,46 @@
 extends common
 
 block content
-    | Installing KV
-    form(method="post")
-        input(name="dbDriver" type="text")
-        input(name="dbConnectionString" type="text")
-        input(name="adminPassword" type="text")
-        input(type="submit")
+    #installModal.modal
+        form(action="/install", method="post")
+            .modal-content
+                h4 KurriculumVitae - Installation
+                p There few steps left on installing KurriculumVitae.
+                .divider
+                h5 Database Config
+                p It will be used to store CVs data
+                p.red
+                    = dbError
+                .input-field
+                    select(name="dbDriver")
+                        option org.h2.Driver
+                .input-field
+                    label(for="dbConnectionString")
+                        | Database connection string
+                    input#dbConnectionString(type="text" name="dbConnectionString" value=dbConnectionString)
+                .input-field
+                    label(for="dbUser")
+                        | Database username
+                    input#dbUser(type="text" name="dbUser" value=dbUser)
+                .input-field
+                    label(for="dbPassword")
+                        | Database password
+                    input#dbPassword(type="text" name="dbPassword" value=dbPassword)
+                .divider
+                h5 Other settings
+                .input-field
+                    label(for="adminPassword")
+                        | Admin password
+                    input(type="password" id="adminPassword" name="adminPassword")
+
+                .input-field
+                    label(for="externalUrl")
+                        | External URL
+                    input(type="text" id="externalUrl" name="externalUrl" value=externalUrl)
+
+            .modal-footer
+                button.modal-action.modal-close.waves-effect.waves-green.btn-flat(type="submit") Continue
+        script(type="text/javascript").
+            $('select').material_select();
+            $('#installModal').openModal();
+

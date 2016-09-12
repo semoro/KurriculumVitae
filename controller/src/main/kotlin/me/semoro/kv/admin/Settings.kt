@@ -14,8 +14,7 @@ import org.jetbrains.ktor.routing.get
 import org.jetbrains.ktor.routing.post
 import org.jetbrains.ktor.routing.route
 import org.mindrot.jbcrypt.BCrypt
-
-
+import java.lang.Exception
 
 
 fun connectToDatabaseOrRedirectToRepair(call: ApplicationCall): Database {
@@ -27,18 +26,49 @@ fun Route.installRoute() {
         post {
             if (!SystemConfiguration.isConfigured) {
                 val adminPasswordHash = BCrypt.hashpw(it.parameters["adminPassword"]!!, BCrypt.gensalt())
-                SystemConfiguration.config = SystemConfiguration.Config(it.parameters["dbDriver"]!!, it.parameters["dbConnectionString"]!!, adminPasswordHash)
-                connectToDatabaseOrRedirectToRepair(call)
-                transaction {
-                    create(*allTables)
+                SystemConfiguration.config = SystemConfiguration.Config(
+                        it.parameters["dbDriver"]!!,
+                        it.parameters["dbConnectionString"]!!,
+                        it.parameters["dbUser"]!!,
+                        it.parameters["dbPassword"]!!,
+                        it.parameters["externalUrl"]!!,
+                        adminPasswordHash)
+
+                try {
+                    SystemConfiguration.connectToDatabase()
+                    transaction {
+                        create(*allTables)
+                    }
+                    SystemConfiguration.save()
+                } catch (e: Exception) {
+                    SystemConfiguration.config = null
+                    call.respond(View.Install.createContent(
+                            mapOf("dbConnectionString" to it.parameters["dbConnectionString"]!!,
+                                    "dbUser" to it.parameters["dbUser"]!!,
+                                    "dbPassword" to it.parameters["dbPassword"]!!,
+                                    "externalUrl" to it.parameters["externalUrl"]!!,
+                                    "dbError" to e.toString()
+                            )))
                 }
-                SystemConfiguration.save()
+
             }
             call.respondRedirect("/manage")
         }
         get {
             if (!SystemConfiguration.isConfigured)
                 call.respond(View.Install.createContent(emptyMap()))
+        }
+    }
+}
+
+fun Route.settingsRoute() {
+    route("/settings") {
+        post {
+
+        }
+        get {
+            if (!SystemConfiguration.isConfigured)
+                call.respondRedirect("/install")
         }
     }
 }

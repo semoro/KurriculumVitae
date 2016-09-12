@@ -11,11 +11,13 @@ block content
             | CV Access Tokens
         .row.card-panel.center-align
             .row
+                .col.s2
+                    | Views
                 .col.s4
                     | Token Link
-                .col.s3
+                .col.s2
                     | CV Title
-                .col.s3
+                .col.s2
                     | Valid through
                 .col.s2
                     | Actions
@@ -23,21 +25,28 @@ block content
             each token in tokens
                 .row
                     .valign-wrapper
-                        .col.s4
-                            p.valign = token.key
-                        .col.s3
-                            p.valign = token.cv.title
-                        .col.s3
-                            p.valign = token.validThrough
                         .col.s2
                             p.valign
-                                a.btn-floating.red(href='/manage/revokeToken?id=' + token.id)
+                                = token.views
+                        .col.s4
+                            p.valign
+                                a(href=externalUrl + token.key)
+                                    =externalUrl + token.key
+                        .col.s2
+                            p.valign
+                                = token.cv.title
+                        .col.s2
+                            p.valign
+                                = token.validThrough
+                        .col.s2
+                            p.valign
+                                a.btn-floating.red(href='/manage/revokeToken/' + token.id)
                                     i.material-icons
                                         | clear
             .row.input-field
                 form(method='post' action='/manage/createToken')
-                    .col.s4
-                    .col.s3
+                    .col.s6
+                    .col.s2
                         select(id="tokenCVSelect" name="cvId" required=true)
                             option(value="" disabled=true selected=true)
                                 | Choose CV
@@ -45,7 +54,7 @@ block content
                                 option(value = cv.id)
                                     = cv.title
 
-                    .col.s3
+                    .col.s2
                         input(name="validThrough" type="date" class="datepicker" required=true)
                     .col.s2
                         button.btn-floating.teal(type="submit")
@@ -72,7 +81,7 @@ block content
                             p.valign
                                 = cv.title
                     .col.s2
-                        a.btn-floating.blue(href='/edit?id=' + cv.id)
+                        a.btn-floating.blue(href='/edit/' + cv.id)
                             i.material-icons
                                 | edit
 
