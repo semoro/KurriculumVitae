@@ -29,27 +29,30 @@ task mergeStyles(type: Copy) {
     from "build/materialize-src/sass"
     into "build/tmp/sass"
 }
+
 mergeStyles.dependsOn unzipMaterializeCSS
 
 apply plugin: "com.github.robfletcher.compass"
 
 compass {
     sassDir = file("build/tmp/sass")
+    cssDir = file("build/resources/main/stylesheets")
 }
 compassCompile.dependsOn mergeStyles
 
-jar {
-    from('build/stylesheets') {
-        into 'stylesheets'
-    }
-    from('build/materialize-src/js/bin') {
-        into 'javascript'
-    }
-    from('src/main/javascript') {
-        into 'javascript'
-    }
-    from('build/materialize-src/fonts') {
-        into 'fonts'
-    }
+task copyJs(type: Copy) {
+    from 'build/materialize-src/js/bin'
+    from 'src/main/javascript'
+    into 'build/resources/main/javascript'
+
 }
 
+task copyFonts(type: Copy) {
+    from 'build/materialize-src/fonts'
+    into 'build/resources/main/fonts'
+}
+
+
+
+processResources.dependsOn copyJs
+processResources.dependsOn copyFonts

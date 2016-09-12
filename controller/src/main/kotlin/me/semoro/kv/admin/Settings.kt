@@ -16,13 +16,9 @@ import org.jetbrains.ktor.routing.route
 import org.mindrot.jbcrypt.BCrypt
 
 
-/**
- * Created by Semoro on 12.09.16.
- * ©XCodersTeam, 2016
- */
 
 
-fun getDatabaseConnectionOrRedirectToRepair(call: ApplicationCall): Database {
+fun connectToDatabaseOrRedirectToRepair(call: ApplicationCall): Database {
     return SystemConfiguration.databaseConnectOrNull() ?: call.respondRedirect("/settings")
 }
 
@@ -32,13 +28,13 @@ fun Route.installRoute() {
             if (!SystemConfiguration.isConfigured) {
                 val adminPasswordHash = BCrypt.hashpw(it.parameters["adminPassword"]!!, BCrypt.gensalt())
                 SystemConfiguration.config = SystemConfiguration.Config(it.parameters["dbDriver"]!!, it.parameters["dbConnectionString"]!!, adminPasswordHash)
-                val db = getDatabaseConnectionOrRedirectToRepair(call)
+                connectToDatabaseOrRedirectToRepair(call)
                 transaction {
                     create(*allTables)
                 }
                 SystemConfiguration.save()
             }
-            call.respondRedirect("/edit")
+            call.respondRedirect("/manage")
         }
         get {
             if (!SystemConfiguration.isConfigured)

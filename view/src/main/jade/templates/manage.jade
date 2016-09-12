@@ -1,6 +1,86 @@
-
 extends common
 
 block content
     | Manage KV
-    each
+    script(type="text/javascript").
+        $(document).ready(function () {
+            $('select').material_select();
+        });
+    .container
+        h3.center-align
+            | CV Access Tokens
+        .row.card-panel.center-align
+            .row
+                .col.s4
+                    | Token Link
+                .col.s3
+                    | CV Title
+                .col.s3
+                    | Valid through
+                .col.s2
+                    | Actions
+            .divider
+            each token in tokens
+                .row
+                    .valign-wrapper
+                        .col.s4
+                            p.valign = token.key
+                        .col.s3
+                            p.valign = token.cv.title
+                        .col.s3
+                            p.valign = token.validThrough
+                        .col.s2
+                            p.valign
+                                a.btn-floating.red(href='/manage/revokeToken?id=' + token.id)
+                                    i.material-icons
+                                        | clear
+            .row.input-field
+                form(method='post' action='/manage/createToken')
+                    .col.s4
+                    .col.s3
+                        select(id="tokenCVSelect" name="cvId" required=true)
+                            option(value="" disabled=true selected=true)
+                                | Choose CV
+                            each cv in allCV
+                                option(value = cv.id)
+                                    = cv.title
+
+                    .col.s3
+                        input(name="validThrough" type="date" class="datepicker" required=true)
+                    .col.s2
+                        button.btn-floating.teal(type="submit")
+                            i.material-icons
+                                | add
+                    script(type="text/javascript").
+                        $('.datepicker').pickadate({
+                            selectMonths: true,
+                            selectYears: 15
+                        });
+        h3.center-align
+            | CVs
+        .row.card-panel.center-align
+            .row
+                .col.s10
+                    | CV Title
+                .col.s2
+                    | Actions
+            .divider
+            each cv in allCV
+                .row
+                    .col.s10
+                        .valign-wrapper
+                            p.valign
+                                = cv.title
+                    .col.s2
+                        a.btn-floating.blue(href='/edit?id=' + cv.id)
+                            i.material-icons
+                                | edit
+
+            .row.input-field
+                form(method='post' action='/manage/createCV')
+                    .col.s10
+                        input(required=true name="title" type="text")
+                    .col.s2
+                        button.btn-floating.teal(type="submit")
+                            i.material-icons
+                                | add

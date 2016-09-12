@@ -8,10 +8,7 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.lang.Exception
 
-/**
- * Created by Semoro on 12.09.16.
- * ©XCodersTeam, 2016
- */
+
 object SystemConfiguration {
     val configFile = File("systemConfig.json")
 

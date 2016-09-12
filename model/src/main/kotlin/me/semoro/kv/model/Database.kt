@@ -1,63 +1,103 @@
 package me.semoro.kv.model
 
-import org.jetbrains.exposed.sql.Table
-
-/**
- * Created by Semoro on 12.09.16.
- * ©XCodersTeam, 2016
- */
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.IntIdTable
 
 
-object Skills : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
+
+object Skills : IntIdTable() {
     val parentId = reference("parentId", id).nullable()
     val name = text("name")
     val description = varchar("description", 1000)
     val level = integer("level")
-    val cv = reference("cv", CVs.id)
 }
 
-object ContactInfo : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
-    val text = varchar("description", 1000)
-}
-
-object OpenSourceProjects : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
+object OpenSourceProjects : IntIdTable() {
     val name = text("name")
     val link = text("link")
     val description = varchar("description", 1000)
-    val cv = reference("cv", CVs.id)
+    val cv = reference("cv", CVs)
 }
 
-object AdditionalProjects : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
+object AdditionalProjects : IntIdTable() {
     val name = text("name")
-    val file = reference("file", Uploads.id)
+    val file = reference("file", Uploads)
     val description = varchar("description", 1000)
-    val cv = reference("cv", CVs.id)
+    val cv = reference("cv", CVs)
 }
 
-object Biographies : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
-    val text = varchar("description", 5000)
+
+object Uploads : IntIdTable() {
+
 }
 
-object Uploads : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
+object CVs : IntIdTable() {
+    val title = text("name")
+    val biography = varchar("biography", 5000)
+    val contactInfo = varchar("contactInfo", 1000)
+    val rootSkill = reference("rootSkill", Skills)
 }
 
-object CVs : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
-    val biography = reference("biography", Biographies.id)
-    val contactInfo = reference("contactInfo", ContactInfo.id)
-}
+object AccessTokens : IntIdTable() {
 
-object AccessTokens : Table() {
-    val id = integer("id").autoIncrement().primaryKey()
     val key = varchar("key", 16).uniqueIndex()
-    val cv = reference("cv", CVs.id)
+    val cv = reference("cv", CVs)
     val validThrough = date("validThrough")
 }
 
-val allTables = arrayOf(Skills, ContactInfo, OpenSourceProjects, AdditionalProjects, Biographies, Uploads, CVs, AccessTokens)
+val allTables = arrayOf(Skills, OpenSourceProjects, AdditionalProjects, Uploads, CVs, AccessTokens)
+
+class CV(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<CV>(CVs)
+
+    var title by CVs.title
+    var biography by CVs.biography
+    var contactInfo by CVs.contactInfo
+    var rootSkill by Skill referencedOn CVs.rootSkill
+    val openSourceProjects by OpenSourceProject referrersOn OpenSourceProjects.cv
+    val additionalProjects by AdditionalProject referrersOn AdditionalProjects.cv
+}
+
+
+class AdditionalProject(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<AdditionalProject>(AdditionalProjects)
+
+    var name by AdditionalProjects.name
+    var file by Upload referencedOn AdditionalProjects.file
+    var description by AdditionalProjects.description
+}
+
+class OpenSourceProject(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<OpenSourceProject>(OpenSourceProjects)
+
+    var name by OpenSourceProjects.name
+    var link by OpenSourceProjects.link
+    var description by OpenSourceProjects.description
+}
+
+
+class Skill(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Skill>(Skills)
+
+    var parent by Skill optionalReferencedOn Skills.parentId
+    var name by Skills.name
+    var description by Skills.description
+    var level by Skills.level
+}
+
+
+class Upload(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Upload>(Uploads)
+
+}
+
+class AccessToken(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<AccessToken>(AccessTokens)
+
+    var key by AccessTokens.key
+    var validThrough by AccessTokens.validThrough
+    var cv by CV referencedOn AccessTokens.cv
+
+}
