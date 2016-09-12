@@ -1,0 +1,55 @@
+apply plugin: 'kotlin'
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/jade']
+        }
+    }
+}
+
+apply plugin: 'de.undercouch.download'
+import de.undercouch.gradle.tasks.download.Download
+
+
+task downloadMaterializeCSS(type: Download) {
+    String materializeCSSVersion = '0.97.7'
+    overwrite false
+    src "http://materializecss.com/bin/materialize-src-v${materializeCSSVersion}.zip"
+    dest new File(buildDir, "materialize-src-v${materializeCSSVersion}.zip")
+}
+
+task unzipMaterializeCSS(dependsOn: downloadMaterializeCSS, type: Copy) {
+    from zipTree(downloadMaterializeCSS.dest)
+    into buildDir
+}
+
+task mergeStyles(type: Copy) {
+    from "src/main/sass"
+    from "build/materialize-src/sass"
+    into "build/tmp/sass"
+}
+mergeStyles.dependsOn unzipMaterializeCSS
+
+apply plugin: "com.github.robfletcher.compass"
+
+compass {
+    sassDir = file("build/tmp/sass")
+}
+compassCompile.dependsOn mergeStyles
+
+jar {
+    from('build/stylesheets') {
+        into 'stylesheets'
+    }
+    from('build/materialize-src/js/bin') {
+        into 'javascript'
+    }
+    from('src/main/javascript') {
+        into 'javascript'
+    }
+    from('build/materialize-src/fonts') {
+        into 'fonts'
+    }
+}
+

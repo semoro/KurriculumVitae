@@ -1,0 +1,79 @@
+group 'me.semoro'
+
+version '0.0.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.0.3'
+
+    repositories {
+        jcenter()
+        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.github.robfletcher:compass-gradle-plugin:2.0.5"
+        classpath "de.undercouch:gradle-download-task:3.1.1"
+    }
+}
+
+
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    version = rootProject.version
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/exposed/" }
+        maven { url "https://dl.bintray.com/kotlin/ktor/" }
+        maven { url  "http://dl.bintray.com/semoro/github" }
+    }
+}
+
+project(":view") {
+    apply plugin: 'kotlin'
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+        // https://mvnrepository.com/artifact/de.neuland-bfi/jade4j
+        compile group: 'de.neuland-bfi', name: 'jade4j', version: '1.2.3'
+        compile 'me.semoro:ktor-jade:0.0.1'
+    }
+}
+
+project(":model") {
+    apply plugin: 'kotlin'
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        compile 'org.jetbrains.exposed:exposed:0.6.5'
+    }
+}
+
+project(":controller") {
+    apply plugin: 'kotlin'
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile project(':model')
+        compile project(':view')
+        compile 'org.jetbrains.ktor:ktor-core:0.2.2'
+        compile 'org.jetbrains.ktor:ktor-netty:0.2.2'
+        compile 'org.jetbrains.ktor:ktor-hosts:0.2.2'
+        compile 'org.jetbrains.ktor:ktor-locations:0.2.2'
+
+        // https://mvnrepository.com/artifact/de.svenkubiak/jBCrypt
+        compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4'
+
+        compile 'me.semoro:ktor-jade:0.0.1'
+
+        // https://mvnrepository.com/artifact/com.google.code.gson/gson
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+
+        // https://mvnrepository.com/artifact/com.h2database/h2
+        compile group: 'com.h2database', name: 'h2', version: '1.4.192'
+
+    }
+}

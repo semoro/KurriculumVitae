@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":controller:main" external.linked.project.path="$MODULE_DIR$/../../../controller" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="KurriculumVitae" external.system.module.type="sourceSet" external.system.module.version="0.0.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../../../controller/build/classes/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../controller/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../controller/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../controller/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../controller/src/main/resources" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.0.3" level="project" />
+    <orderEntry type="module" module-name="model_main" />
+    <orderEntry type="module" module-name="view_main" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.ktor:ktor-core:0.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.ktor:ktor-netty:0.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.ktor:ktor-locations:0.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: de.svenkubiak:jBCrypt:0.4" level="project" />
+    <orderEntry type="library" name="Gradle: me.semoro:ktor-jade:0.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.7" level="project" />
+    <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.192" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.exposed:exposed:0.6.5" level="project" />
+    <orderEntry type="library" name="Gradle: de.neuland-bfi:jade4j:1.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-support-jdk8:pom:0.1-alpha-2" level="project" />
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.typesafe:config:1.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-all:4.1.2.Final" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.alpn:alpn-api:1.1.3.v20160715" level="project" />
+    <orderEntry type="library" name="Gradle: joda-time:joda-time:2.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-jexl:2.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.pegdown:pegdown:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-support-jdk7:0.1-alpha-2" level="project" />
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.parboiled:parboiled-java:1.1.7" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.parboiled:parboiled-core:1.1.7" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm:5.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-tree:5.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-analysis:5.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-util:5.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
+  </component>
+</module>
