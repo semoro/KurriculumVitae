@@ -6,6 +6,8 @@ import me.semoro.kv.model.AccessToken
 import me.semoro.kv.model.AccessTokens
 import me.semoro.kv.utils.SystemConfiguration
 import me.semoro.kv.view.View
+import org.commonmark.html.HtmlRenderer
+import org.commonmark.parser.Parser
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.ktor.application.call
 import org.jetbrains.ktor.http.ContentType
@@ -13,9 +15,21 @@ import org.jetbrains.ktor.response.respondRedirect
 import org.jetbrains.ktor.response.respondText
 import org.jetbrains.ktor.routing.Route
 import org.jetbrains.ktor.routing.get
+
 import java.text.SimpleDateFormat
 
 val standardDateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+object MarkDownRenderer {
+
+    val mdParser = Parser.builder().build()
+    val renderer = HtmlRenderer.builder().build()
+
+    fun render(md: String): String {
+        return renderer.render(mdParser.parse(md))
+    }
+}
+
 
 fun Route.indexRoute() {
     get("{token}") {
@@ -30,7 +44,7 @@ fun Route.indexRoute() {
                 if (foundToken.validThrough.isAfterNow) {
                     foundToken.views = foundToken.views + 1
                     commit()
-                    call.respondText(ContentType.Text.Html, View.Index.createContent(mapOf("token" to foundToken)).processImmediately())
+                    call.respondText(ContentType.Text.Html, View.Index.createContent(mapOf("token" to foundToken, "MarkDownRenderer" to MarkDownRenderer)).processImmediately())
                 }
             }
         }

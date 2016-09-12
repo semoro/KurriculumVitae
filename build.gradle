@@ -75,5 +75,6 @@ project(":controller") {
         // https://mvnrepository.com/artifact/com.h2database/h2
         compile group: 'com.h2database', name: 'h2', version: '1.4.192'
 
+        compile 'com.atlassian.commonmark:commonmark:0.6.0'
     }
 }

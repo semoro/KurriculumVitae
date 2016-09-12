@@ -6,12 +6,11 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
 
 
-
 object Skills : IntIdTable() {
-    val parentId = reference("parentId", id).nullable()
     val name = text("name")
     val description = varchar("description", 1000)
     val level = integer("level")
+    val cv = reference("cv", CVs)
 }
 
 object OpenSourceProjects : IntIdTable() {
@@ -23,21 +22,16 @@ object OpenSourceProjects : IntIdTable() {
 
 object AdditionalProjects : IntIdTable() {
     val name = text("name")
-    val file = reference("file", Uploads)
+    val link = text("link")
     val description = varchar("description", 1000)
     val cv = reference("cv", CVs)
 }
 
 
-object Uploads : IntIdTable() {
-
-}
-
 object CVs : IntIdTable() {
     val title = text("name")
     val biography = varchar("biography", 5000)
     val contactInfo = varchar("contactInfo", 1000)
-    val rootSkill = reference("rootSkill", Skills)
 }
 
 object AccessTokens : IntIdTable() {
@@ -48,7 +42,7 @@ object AccessTokens : IntIdTable() {
     val views = integer("views")
 }
 
-val allTables = arrayOf(Skills, OpenSourceProjects, AdditionalProjects, Uploads, CVs, AccessTokens)
+val allTables = arrayOf(Skills, OpenSourceProjects, AdditionalProjects, CVs, AccessTokens)
 
 class CV(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CV>(CVs)
@@ -56,7 +50,7 @@ class CV(id: EntityID<Int>) : IntEntity(id) {
     var title by CVs.title
     var biography by CVs.biography
     var contactInfo by CVs.contactInfo
-    var rootSkill by Skill referencedOn CVs.rootSkill
+    val skills by Skill referrersOn Skills.cv
     val openSourceProjects by OpenSourceProject referrersOn OpenSourceProjects.cv
     val additionalProjects by AdditionalProject referrersOn AdditionalProjects.cv
 }
@@ -66,8 +60,9 @@ class AdditionalProject(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AdditionalProject>(AdditionalProjects)
 
     var name by AdditionalProjects.name
-    var file by Upload referencedOn AdditionalProjects.file
+    var link by AdditionalProjects.link
     var description by AdditionalProjects.description
+    var cv by CV referencedOn AdditionalProjects.cv
 }
 
 class OpenSourceProject(id: EntityID<Int>) : IntEntity(id) {
@@ -76,23 +71,19 @@ class OpenSourceProject(id: EntityID<Int>) : IntEntity(id) {
     var name by OpenSourceProjects.name
     var link by OpenSourceProjects.link
     var description by OpenSourceProjects.description
+    var cv by CV referencedOn OpenSourceProjects.cv
 }
 
 
 class Skill(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Skill>(Skills)
 
-    var parent by Skill optionalReferencedOn Skills.parentId
     var name by Skills.name
     var description by Skills.description
     var level by Skills.level
+    var cv by CV referencedOn Skills.cv
 }
 
-
-class Upload(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Upload>(Uploads)
-
-}
 
 class AccessToken(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AccessToken>(AccessTokens)

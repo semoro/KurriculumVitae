@@ -1,4 +1,171 @@
 extends common
 
+mixin skill(skill)
+    li.skill(data-id=skill.id).card-panel
+        .row
+            .col.s6
+                input(name="skillName" type="text" value=skill.name)
+            .col.s5
+                .right-align
+                    input(name="skillLevel" type="number" value=skill.level)
+            .col.s1
+                .right-align
+                    button.btn-floating.red
+                        i.material-icons
+                            | clear
+        .row
+            textarea()
+                = skill.description
+
+
+
+mixin project(project)
+    li.project(data-id=project.id).card-panel
+        .row
+            .col.s6
+                input(name="projectName" type="text" value=project.name)
+            .col.s5
+                .right-align
+                    input(name="projectLink" type="text" value=project.link)
+            .col.s1
+                .right-align
+                    button.btn-floating.red
+                        i.material-icons
+                            | clear
+        .row
+            textarea()
+                = project.description
+
 block content
-    input(type="text" value=CV.name)
+    .container
+        form(action="#" data-id=CV.id)#editorForm
+            input#title(type="text" value=CV.title name="title")
+            h4 Contacts
+            .row.card-panel#contacts
+                textarea()
+                    = CV.contactInfo
+
+            h4 Biography
+            .row.card-panel#bio
+                textarea()
+                    = CV.biography
+
+            #skills
+                .row.valign-wrapper
+                    .col.s10.valign
+                        h4 Skills
+                    .col.s2.valign
+                        .right-align
+                            button.btn-floating.teal.add-btn
+                                i.material-icons
+                                    | add
+                .hide
+                    +skill(null)
+                ul.row
+                    each skill in CV.skills
+                        +skill(skill)
+
+            #openSource
+                .row.valign-wrapper
+                    .col.s10.valign
+                        h4 OpenSource Projects
+                    .col.s2.valign
+                        .right-align
+                            button.btn-floating.teal.add-btn
+                                i.material-icons
+                                    | add
+                .hide
+                    +project(null)
+                ul.row
+                    each project in CV.openSourceProjects
+                        +project(project)
+
+            #additional
+                .row.valign-wrapper
+                    .col.s10.valign
+                        h4 Additional projects
+                    .col.s2.valign
+                        .right-align
+                            button.btn-floating.teal.add-btn
+                                i.material-icons
+                                    | add
+                .hide
+                    +project(null)
+                ul.row
+                    each project in CV.additionalProjects
+                        +project(project)
+            button(type = "submit").btn-flat
+                | Save
+        script(type="text/javascript").
+            $(document).ready(function () {
+                var skills = $('#skills');
+                var openSource = $('#openSource');
+                var additional = $('#additional');
+
+
+                function forEachDeleteButton(btn) {
+                    $(btn).click(function (event) {
+                        event.stopPropagation();
+                        $($(btn).parents("li")).remove()
+                    })
+                }
+
+                $('ul.row li .red').each(function (i, e) {
+                    forEachDeleteButton(e);
+                });
+
+                function registerAddBtn(on) {
+                    on.find('button.add-btn').click(function (event) {
+                        event.stopPropagation();
+                        on.find(".hide li").clone().appendTo(on.find('ul.row'));
+                        on.find("ul.row li .red").each(function (i, e) {
+                            forEachDeleteButton(e);
+                        });
+                    });
+                }
+
+                registerAddBtn(skills);
+                registerAddBtn(openSource);
+                registerAddBtn(additional);
+
+                $('#editorForm').submit(function () {
+                    event.preventDefault();
+                    var req = {};
+                    req.title = $("input#title").val();
+                    req.biography = $("#bio textarea").val();
+                    req.contactInfo = $("#contacts textarea").val();
+                    req.skills = skills.find("ul.row li").map(function (index, element) {
+                        return {
+                            id: $(this).data("id"),
+                            description: $(this).find("textarea").val(),
+                            name: $(this).find("input[name=skillName]").val(),
+                            level: $(this).find("input[name=skillLevel]").val()
+                        }
+                    }).get();
+                    req.openSourceProjects = openSource.find("ul.row li").map(function (index, element) {
+                        return {
+                            id: $(this).data("id"),
+                            description: $(this).find("textarea").val(),
+                            name: $(this).find("input[name=projectName]").val(),
+                            link: $(this).find("input[name=projectLink]").val()
+                        }
+                    }).get();
+                    req.additionalProjects = additional.find("ul.row li").map(function (index, element) {
+                        return {
+                            id: $(this).data("id"),
+                            description: $(this).find("textarea").val(),
+                            name: $(this).find("input[name=projectName]").val(),
+                            link: $(this).find("input[name=projectLink]").val()
+                        }
+                    }).get();
+
+                    $.ajax({
+                        url: "/edit/" + $('#editorForm').data('id'),
+                        dataType : 'json',
+                        data: JSON.stringify(req),
+                        method: "post"
+                    })
+                });
+
+            });
+

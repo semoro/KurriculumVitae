@@ -1,5 +1,52 @@
 extends common
 
+block head
+    title
+        =token.cv.title
+
 block content
     .container
-        .row
+
+        h4 Contacts
+        .row.card-panel#contacts
+            != MarkDownRenderer.render(token.cv.contactInfo)
+
+        h4 Biography
+        .row.card-panel#bio
+            != MarkDownRenderer.render(token.cv.biography)
+
+        h4 Skills
+        ul#skills.row.collapsible(data-collapsible='accordion')
+            each skill in token.cv.skills
+                li
+                    .collapsible-header
+                        .col.s6
+                            =skill.name
+                        .col.s6
+                            .right-align
+                                ="Level " + skill.level + "/10"
+                    .collapsible-body
+                        != MarkDownRenderer.render(skill.description)
+
+        h4 OpenSource Projects
+        ul#openSource.row.collapsible(data-collapsible='accordion')
+            each project in token.cv.openSourceProjects
+                li
+                    .collapsible-header
+                        = project.name
+                    .collapsible-body
+                        a(href=project.link)
+                            =project.link
+                        != MarkDownRenderer.render(project.description)
+
+
+        h4 Additional Projects
+        ul#additional.row.collapsible(data-collapsible='accordion')
+            each project in token.cv.additionalProjects
+                li
+                    .collapsible-header
+                        = project.name
+                    .collapsible-body
+                        a(href=project.file)
+                            =project.file
+                        != MarkDownRenderer.render(project.description)

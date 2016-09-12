@@ -21,6 +21,7 @@
     <orderEntry type="library" name="Gradle: me.semoro:ktor-jade:0.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.7" level="project" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.192" level="project" />
+    <orderEntry type="library" name="Gradle: com.atlassian.commonmark:commonmark:0.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.3" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.exposed:exposed:0.6.5" level="project" />
     <orderEntry type="library" name="Gradle: de.neuland-bfi:jade4j:1.2.3" level="project" />
