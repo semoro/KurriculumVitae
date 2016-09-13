@@ -50,6 +50,6 @@ block content
                     .collapsible-header
                         = project.name
                     .collapsible-body
-                        a(href=project.file).project-head-link
-                            =project.file
+                        a(href=project.link).project-head-link
+                            =project.link
                         != MarkDownRenderer.render(project.description)
