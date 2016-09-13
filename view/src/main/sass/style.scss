@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  font-size: medium;
+}
+
+#editorForm button#submit {
+  position: fixed;
+  top: 5em;
+  right: 5em;
+}
+
+.collapsible-body p {
+  padding: 0;
+  margin: 0.5em 0;
+}
+
+.collapsible-body > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.collapsible-body > p:first-of-type {
+  margin-top: 0;
+}
+
+.collapsible-body {
+  padding: 1.5em;
+}

@@ -3,10 +3,7 @@ extends common
 block head
     title
         =token.cv.title
-    style(type="text/css").
-        a.project-head-link {
-            margin-left: 1em;
-        }
+
 block content
     .container
 
@@ -23,9 +20,9 @@ block content
             each skill in token.cv.skills
                 li
                     .collapsible-header
-                        .col.s6
+                        .col.s8
                             =skill.name
-                        .col.s6
+                        .col.s4
                             .right-align
                                 ="Level " + skill.level + "/10"
                     .collapsible-body
