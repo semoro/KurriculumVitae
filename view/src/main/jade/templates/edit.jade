@@ -10,11 +10,11 @@ mixin skill(skill)
                     input(name="skillLevel" type="number" value=skill.level)
             .col.s1
                 .right-align
-                    button.btn-floating.red
+                    button(type="button").btn-floating.red
                         i.material-icons
                             | clear
         .row
-            textarea()
+            textarea().materialize-textarea
                 = skill.description
 
 
@@ -29,12 +29,16 @@ mixin project(project)
                     input(name="projectLink" type="text" value=project.link)
             .col.s1
                 .right-align
-                    button.btn-floating.red
+                    button(type="button").btn-floating.red
                         i.material-icons
                             | clear
         .row
-            textarea()
+            textarea().materialize-textarea
                 = project.description
+
+block head
+    title
+        | KurriculumVitae - Editing CV
 
 block content
     .container
@@ -42,12 +46,12 @@ block content
             input#title(type="text" value=CV.title name="title")
             h4 Contacts
             .row.card-panel#contacts
-                textarea()
+                textarea().materialize-textarea
                     = CV.contactInfo
 
             h4 Biography
             .row.card-panel#bio
-                textarea()
+                textarea().materialize-textarea
                     = CV.biography
 
             #skills
@@ -56,7 +60,7 @@ block content
                         h4 Skills
                     .col.s2.valign
                         .right-align
-                            button.btn-floating.teal.add-btn
+                            button(type="button").btn-floating.teal.add-btn
                                 i.material-icons
                                     | add
                 .hide
@@ -71,7 +75,7 @@ block content
                         h4 OpenSource Projects
                     .col.s2.valign
                         .right-align
-                            button.btn-floating.teal.add-btn
+                            button(type="button").btn-floating.teal.add-btn
                                 i.material-icons
                                     | add
                 .hide
@@ -86,7 +90,7 @@ block content
                         h4 Additional projects
                     .col.s2.valign
                         .right-align
-                            button.btn-floating.teal.add-btn
+                            button(type="button").btn-floating.teal.add-btn
                                 i.material-icons
                                     | add
                 .hide
@@ -94,8 +98,17 @@ block content
                 ul.row
                     each project in CV.additionalProjects
                         +project(project)
-            button(type = "submit").btn-flat
-                | Save
+                        
+            button(type = "submit").btn-floating.teal#submit
+                i.large.material-icons
+                    | save
+            style(type="text/css").
+                button#submit {
+                    position: fixed;
+                    top: 5em;
+                    right: 5em;
+                }
+
         script(type="text/javascript").
             $(document).ready(function () {
                 var skills = $('#skills');
@@ -117,6 +130,7 @@ block content
                 function registerAddBtn(on) {
                     on.find('button.add-btn').click(function (event) {
                         event.stopPropagation();
+                        event.stopImmediatePropagation();
                         on.find(".hide li").clone().appendTo(on.find('ul.row'));
                         on.find("ul.row li .red").each(function (i, e) {
                             forEachDeleteButton(e);
@@ -161,9 +175,16 @@ block content
 
                     $.ajax({
                         url: "/edit/" + $('#editorForm').data('id'),
-                        dataType : 'json',
+                        dataType: 'json',
                         data: JSON.stringify(req),
                         method: "post"
+                    }).done(function () {
+                        Materialize.toast("Saved!");
+                        setTimeout(function () {
+                            location.reload();
+                        }, 500);
+                    }).fail(function () {
+                        Materialize.toast("ERROR ON SAVING!");
                     })
                 });
 

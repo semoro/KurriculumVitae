@@ -8,11 +8,29 @@ html
 
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
         meta(charset="utf-8")
+        style(type="text/css").
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+            main {
+                flex: 1 0 auto;
+            }
+            footer {
+                font-size: medium;
+            }
+
         block head
     body
         header
             block header
         main
             block content
-        footer
+        footer.page-footer.grey.lighten-5
+            .footer-copyright.grey.lighten-4.black-text
+                .container
+                    .center-align
+                        a(href = "https://github.com/semoro/KurriculumVitae").teal-text KurriculumVitae
+                        = " - Kotlin curriculum vitae hosting engine"
 

@@ -42,5 +42,7 @@ block content
                 button.modal-action.modal-close.waves-effect.waves-green.btn-flat(type="submit") Continue
         script(type="text/javascript").
             $('select').material_select();
-            $('#installModal').openModal();
+            $('#installModal').openModal({
+                dismissible: false
+            });
 

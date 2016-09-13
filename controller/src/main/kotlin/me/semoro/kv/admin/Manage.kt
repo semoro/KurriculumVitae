@@ -114,6 +114,7 @@ fun Route.editRoute() {
                     /////////////
 
                     commit()
+                    call.respondText(ContentType.Application.Json, "\"ok\"")
                 }
             }
         }
