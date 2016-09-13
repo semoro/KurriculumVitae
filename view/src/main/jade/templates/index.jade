@@ -3,7 +3,10 @@ extends common
 block head
     title
         =token.cv.title
-
+    style(type="text/css").
+        a.project-head-link {
+            margin-left: 1em;
+        }
 block content
     .container
 
@@ -35,7 +38,7 @@ block content
                     .collapsible-header
                         = project.name
                     .collapsible-body
-                        a(href=project.link)
+                        a(href=project.link).project-head-link
                             =project.link
                         != MarkDownRenderer.render(project.description)
 
@@ -47,6 +50,6 @@ block content
                     .collapsible-header
                         = project.name
                     .collapsible-body
-                        a(href=project.file)
+                        a(href=project.file).project-head-link
                             =project.file
                         != MarkDownRenderer.render(project.description)
